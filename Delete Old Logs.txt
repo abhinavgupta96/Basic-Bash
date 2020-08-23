@@ -1,0 +1,11 @@
+#!/bin/bash
+files=($(find /home/ubuntu/audios/ -mtime +2 -type f -name "audio*"))
+current_time=$(date "+%d-%m-%Y")
+delete_time=$(date "+%d-%m-%YT%T%z")
+for file in "${files[@]}"
+do
+  create_time=($(date -d "@$( stat -c "%Y" ${file} )" "+%d-%m-%YT%T%z"))
+  name=($(basename ${file}))
+  echo "${name} ${create_time} ${delete_time}">>/home/ubuntu/audios/deleted-files-${current_time}.log
+  rm $file 2>/dev/null
+done
